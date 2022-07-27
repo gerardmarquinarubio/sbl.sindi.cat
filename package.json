@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/gerardmarquinarubio/sbl.sindi.cat#readme",
   "dependencies": {
-    "class-validator": "^0.13.2"
+    "class-validator": "^0.13.2",
+    "node-fetch": "^3.2.9"
   }
 }
