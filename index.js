@@ -1,3 +1,5 @@
+'use strict';
+
 const { isEmail, isAscii, isLatLong, minLength, maxLength } = require('class-validator');
 
 class User {
