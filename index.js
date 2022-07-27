@@ -1,7 +1,7 @@
 'use strict';
 
 const { isEmail, isAscii, isLatLong, minLength, maxLength } = require('class-validator');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = require('node-fetch');
 
 class User {
 
