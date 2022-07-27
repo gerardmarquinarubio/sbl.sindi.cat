@@ -11,6 +11,7 @@ class User {
             !isAscii(password) ||
             !minLength(password, 8)
         ) throw new Error('User.checkCredentials: data is invalid');
+        return true;
     }
 
 }
@@ -35,6 +36,7 @@ class Org {
             !minLength(verification, 16) ||
             !maxLength(verification, 1024)
         ) throw new Error('Org.checkOrganization: data is invalid');
+        return true;
     }
 }
 
@@ -50,6 +52,7 @@ class Utils {
         const json = await data.json();
         if (!json.success)
             throw new Error('Invalid hcaptcha');
+        return true;
     }
 }
 
