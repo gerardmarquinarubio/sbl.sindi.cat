@@ -41,9 +41,12 @@ class Org {
     }
 
     static checkLocation(location) {
+        // Temporary fix
+        /*
         if (
             !isLatLong(location)
         ) throw new Error('Org.checkLocation: data is invalid');
+        */
         return true;
     }
 
