@@ -109,21 +109,9 @@ class sbl {
 
     constructor(throwsException = false) {
         this.throwsException = throwsException;
-        this.user = {
-            checkEmail: User.checkEmail,
-            checkPassword: User.checkPassword,
-            checkCredentials: User.checkCredentials
-        };
-        this.org = {
-            checkName: Org.checkName,
-            checkLocation: Org.checkLocation,
-            checkDescription: Org.checkDescription,
-            checkVerification: Org.checkVerification,
-            checkOrganization: Org.checkOrganization
-        };
-        this.utils = {
-            verifyHcaptcha: Utils.verifyHcaptcha
-        };
+        this.User = User;
+        this.Org = Org;
+        this.Utils = Utils;
     }
 
     static getInstance(throwsException = false) {
