@@ -1,6 +1,6 @@
 'use strict';
 
-var throwsException = true;
+var __instance = null;
 
 const mailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -10,71 +10,71 @@ const latLngRegex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[
 const orgDescRegex = /^[\p{L} ,.*!?()@1-9-]{3,500}$/giu;
 const orgVerRegex = /^[\p{L} ,.*!?()@1-9-]{3,500}$/giu;
 
-class User {
+const User = {
 
-    static checkEmail(email) {
+    checkEmail: function checkEmail(email) {
         if (!mailRegex.test(email)) {
-            if (throwsException)
+            if (this.throwsException)
                 throw new Error('User.checkEmail: data is invalid');
             return false;
         }
         return true;
-    }
+    },
 
-    static checkPassword(password) {
+    checkPassword: function checkPassword(password) {
         if (!passwordRegex.test(password)) {
-            if (throwsException)
+            if (this.throwsException)
                 throw new Error('User.checkPassword: data is invalid');
             return false;
         }
         return true;
-    }
+    },
 
-    static checkCredentials(email, password) {
+    checkCredentials: function checkCredentials(email, password) {
         User.checkEmail(email);
         User.checkPassword(password);
         return true;
-    }
+    },
 
 }
 
-class Org {
+const Org = {
 
-    static checkName(name) {
+    checkName: function checkName(name) {
         if (!orgNameRegex.test(name)) {
-            if (throwsException)
+            if (this.throwsException)
                 throw new Error('Org.checkName: data is invalid');
             return false;
         }
-    }
+    },
 
-    static checkLocation(location) {
+    checkLocation: function checkLocation(location) {
         if (!latLngRegex.test(location)) {
-            if (throwsException)
+            if (this.throwsException)
                 throw new Error('Org.checkLocation: data is invalid');
             return false;
         }
         return true;
-    }
+    },
 
-    static checkDescription(description) {
+    checkDescription: function checkDescription(description) {
         if (!orgDescRegex.test(description)) {
-            if (throwsException)
+            if (this.throwsException)
                 throw new Error('Org.checkDescription: data is invalid');
             return false;
         }
-    }
+    },
 
-    static checkVerification(verification) {
+    checkVerification: function checkVerification(verification) {
         if (!orgVerRegex.test(verification)) {
-            if (throwsException)
+            if (this.throwsException)
                 throw new Error('Org.checkVerification: data is invalid');
             return false;
         }
         return true;
-    }
+    },
 
-    static checkOrganization(
+    checkOrganization: function checkOrganization(
         name,
         location,
         description,
@@ -85,7 +85,8 @@ class Org {
         Org.checkDescription(description);
         Org.checkVerification(verification);
         return true;
-    }
+    },
+
 }
 
 class Utils {
@@ -104,9 +105,37 @@ class Utils {
     }
 }
 
-module.exports = {
-    throwsException,
-    User,
-    Org,
-    Utils,
+class sbl {
+
+    constructor(throwsException = false) {
+        this.throwsException = throwsException;
+        this.user = {
+            checkEmail: User.checkEmail,
+            checkPassword: User.checkPassword,
+            checkCredentials: User.checkCredentials
+        };
+        this.org = {
+            checkName: Org.checkName,
+            checkLocation: Org.checkLocation,
+            checkDescription: Org.checkDescription,
+            checkVerification: Org.checkVerification,
+            checkOrganization: Org.checkOrganization
+        };
+        this.utils = {
+            verifyHcaptcha: Utils.verifyHcaptcha
+        };
+    }
+
+    static getInstance(throwsException = false) {
+        if (__instance === null)
+            __instance = new sbl(throwsException);
+        return __instance;
+    }
+
+    thatDontThrow() {
+        this.throwsException = false;
+        return this;
+    }
 }
+
+module.exports = sbl;
