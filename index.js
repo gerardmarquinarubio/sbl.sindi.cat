@@ -1,23 +1,32 @@
 'use strict';
 
-const { isEmail, isAscii, isLatLong, minLength, maxLength } = require('class-validator');
-const fetch = require('node-fetch');
+var throwsException = true;
+
+const mailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+const orgNameRegex = /^[\p{L} (),@1-9-]{3,50}$/giu;
+const latLngRegex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
+const orgDescRegex = /^[\p{L} ,.*!?()@1-9-]{3,500}$/giu;
+const orgVerRegex = /^[\p{L} ,.*!?()@1-9-]{3,500}$/giu;
 
 class User {
 
     static checkEmail(email) {
-        if (
-            !isEmail(email)
-        )
-            throw new Error('User.checkEmail: data is invalid');
+        if (!mailRegex.test(email)) {
+            if (throwsException)
+                throw new Error('User.checkEmail: data is invalid');
+            return false;
+        }
         return true;
     }
 
     static checkPassword(password) {
-        if (
-            !isAscii(password) ||
-            !minLength(password, 8)
-        ) throw new Error('User.checkPassword: data is invalid');
+        if (!passwordRegex.test(password)) {
+            if (throwsException)
+                throw new Error('User.checkPassword: data is invalid');
+            return false;
+        }
         return true;
     }
 
@@ -32,39 +41,36 @@ class User {
 class Org {
 
     static checkName(name) {
-        if (
-            !isAscii(name) ||
-            !minLength(name, 3) ||
-            !maxLength(name, 64)
-        ) throw new Error('Org.checkName: data is invalid');
-        return true;
+        if (!orgNameRegex.test(name)) {
+            if (throwsException)
+                throw new Error('Org.checkName: data is invalid');
+            return false;
+        }
     }
 
     static checkLocation(location) {
-        // Temporary fix
-        /*
-        if (
-            !isLatLong(location)
-        ) throw new Error('Org.checkLocation: data is invalid');
-        */
+        if (!latLngRegex.test(location)) {
+            if (throwsException)
+                throw new Error('Org.checkLocation: data is invalid');
+            return false;
+        }
         return true;
     }
 
     static checkDescription(description) {
-        if (
-            !isAscii(description) ||
-            !minLength(description, 10) ||
-            !maxLength(description, 2056)
-        ) throw new Error('Org.checkDescription: data is invalid');
-        return true;
+        if (!orgDescRegex.test(description)) {
+            if (throwsException)
+                throw new Error('Org.checkDescription: data is invalid');
+            return false;
+        }
     }
 
     static checkVerification(verification) {
-        if (
-            !isAscii(verification) ||
-            !minLength(verification, 16) ||
-            !maxLength(verification, 1024)
-        ) throw new Error('Org.checkVerification: data is invalid');
+        if (!orgVerRegex.test(verification)) {
+            if (throwsException)
+                throw new Error('Org.checkVerification: data is invalid');
+            return false;
+        }
         return true;
     }
 
@@ -83,7 +89,7 @@ class Org {
 }
 
 class Utils {
-    static async verifyHcaptcha(hcaptcha) {
+    static async verifyHcaptcha(hcaptcha, fetch) {
         const data = await fetch('https://hcaptcha.com/siteverify', {
             method: 'POST',
             headers: {
@@ -99,7 +105,8 @@ class Utils {
 }
 
 module.exports = {
+    throwsException,
     User,
     Org,
-    Utils
+    Utils,
 }
