@@ -112,6 +112,9 @@ class sbl {
         this.User = User;
         this.Org = Org;
         this.Utils = Utils;
+        this.User.throwsException = throwsException;
+        this.Org.throwsException = throwsException;
+        this.Utils.throwsException = throwsException;
     }
 
     static getInstance(throwsException = false) {
