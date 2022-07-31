@@ -46,6 +46,7 @@ const Org = {
                 throw new Error('Org.checkName: data is invalid');
             return false;
         }
+        return true;
     },
 
     checkLocation: function checkLocation(location) {
@@ -63,6 +64,7 @@ const Org = {
                 throw new Error('Org.checkDescription: data is invalid');
             return false;
         }
+        return true;
     },
 
     checkVerification: function checkVerification(verification) {
